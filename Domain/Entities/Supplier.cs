@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Category
+    public class Supplier
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string Address { get; set; }
+        public string Phone { get; set; }
         public bool IsDeleted { get; set; }
         public ICollection<Medicine> medicines { get; set; } = new HashSet<Medicine>();
-       
+        public ICollection<MedicineBatch> medicineBatches { get; set; } = new HashSet<MedicineBatch>();
+        
     }
 }

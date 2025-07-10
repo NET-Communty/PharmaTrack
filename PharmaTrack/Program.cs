@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using Persistence.Context;
+
 namespace PharmaTrack
 {
     public class Program
@@ -12,6 +15,9 @@ namespace PharmaTrack
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+            builder.Services.AddDbContext<PharmaProjectContext>(options =>
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("cs")));
+
 
             var app = builder.Build();
 
