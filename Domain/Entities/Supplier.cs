@@ -14,7 +14,7 @@ namespace Domain.Entities
         public string Phone { get; set; }
         public bool IsDeleted { get; set; }
         public ICollection<Medicine> medicines { get; set; } = new HashSet<Medicine>();
-        public ICollection<MedicineBatch> medicineBatches { get; set; } = new HashSet<MedicineBatch>();
+        public ICollection<MedicineBatchBase> medicineBatches { get; set; } = new HashSet<MedicineBatchBase>();
         
     }
 }

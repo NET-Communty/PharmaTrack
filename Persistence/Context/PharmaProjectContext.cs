@@ -17,22 +17,26 @@ namespace Persistence.Context
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Category>()
-                .HasQueryFilter(a => a.IsDeleted==false);
-            builder.Entity<Medicine>()
-               .HasQueryFilter(a => a.IsDeleted==false);
-            builder.Entity<MedicineBatch>()
-               .HasQueryFilter(a => a.IsDeleted==false);
-            builder.Entity<Stock>()
-               .HasQueryFilter(a => a.IsDeleted==false);
-            builder.Entity<Supplier>()
-               .HasQueryFilter(a => a.IsDeleted==false);
-            base.OnModelCreating(builder);
+            builder.Entity<MedicineBatch>().ToTable("MedicineBatches");
+            builder.Entity<ArchivedMedicineBatch>().ToTable("ArchivedMedicineBatches");
 
+            builder.Entity<Category>()
+                .HasQueryFilter(a => !a.IsDeleted);
+            builder.Entity<Medicine>()
+               .HasQueryFilter(a => !a.IsDeleted);
+            builder.Entity<MedicineBatchBase>()
+               .HasQueryFilter(a => !a.IsDeleted);
+            builder.Entity<Stock>()
+               .HasQueryFilter(a => !a.IsDeleted);
+            builder.Entity<Supplier>()
+               .HasQueryFilter(a => !a.IsDeleted);
+
+            base.OnModelCreating(builder);
         }
         public DbSet<Category> categories { get; set; }
         public DbSet<Medicine> medicines { get; set; }
         public DbSet<MedicineBatch> medicineBatches { get; set; }
+        public DbSet<ArchivedMedicineBatch> ArchivedMedicineBatches { get; set; }
         public DbSet<Stock> stocks { get; set; }
         public DbSet<Supplier> suppliers { get; set; }
     }

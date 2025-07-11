@@ -12,6 +12,7 @@ namespace Domain.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string ImageUrl { get; set; }
         public int LowStockThreshold { get; set; }
         public bool IsDeleted { get; set; }
         [ForeignKey("Category")]
@@ -20,7 +21,7 @@ namespace Domain.Entities
         [ForeignKey("Supplier")]
         public int SupplierId { get; set; }
         public Supplier Supplier { get; set; }
-        public ICollection<MedicineBatch> medicineBatches { get; set; } = new HashSet<MedicineBatch>();
+        public ICollection<MedicineBatchBase> medicineBatches { get; set; } = new HashSet<MedicineBatchBase>();
        
     }
 }

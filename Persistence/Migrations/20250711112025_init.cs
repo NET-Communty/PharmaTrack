@@ -63,17 +63,17 @@ namespace Persistence.Migrations
                         column: x => x.CategoryId,
                         principalTable: "categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.NoAction );
                     table.ForeignKey(
                         name: "FK_medicines_suppliers_SupplierId",
                         column: x => x.SupplierId,
                         principalTable: "suppliers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction );
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
-                name: "medicineBatches",
+                name: "MedicineBatchBase",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -88,19 +88,54 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_medicineBatches", x => x.Id);
+                    table.PrimaryKey("PK_MedicineBatchBase", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_medicineBatches_medicines_MedicineId",
+                        name: "FK_MedicineBatchBase_medicines_MedicineId",
                         column: x => x.MedicineId,
                         principalTable: "medicines",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction );
                     table.ForeignKey(
-                        name: "FK_medicineBatches_suppliers_SupplierId",
+                        name: "FK_MedicineBatchBase_suppliers_SupplierId",
                         column: x => x.SupplierId,
                         principalTable: "suppliers",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction );
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ArchivedMedicineBatches",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    ArchivedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ArchivedMedicineBatches", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ArchivedMedicineBatches_MedicineBatchBase_Id",
+                        column: x => x.Id,
+                        principalTable: "MedicineBatchBase",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MedicineBatches",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicineBatches", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MedicineBatches_MedicineBatchBase_Id",
+                        column: x => x.Id,
+                        principalTable: "MedicineBatchBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction );
                 });
 
             migrationBuilder.CreateTable(
@@ -113,27 +148,34 @@ namespace Persistence.Migrations
                     TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
                     type = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    MedicineBatchId = table.Column<int>(type: "int", nullable: false)
+                    MedicineBatchId = table.Column<int>(type: "int", nullable: false),
+                    MedicineBatchId1 = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_stocks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_stocks_medicineBatches_MedicineBatchId",
+                        name: "FK_stocks_MedicineBatchBase_MedicineBatchId",
                         column: x => x.MedicineBatchId,
-                        principalTable: "medicineBatches",
+                        principalTable: "MedicineBatchBase",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_stocks_MedicineBatches_MedicineBatchId1",
+                        column: x => x.MedicineBatchId1,
+                        principalTable: "MedicineBatches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction );
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_medicineBatches_MedicineId",
-                table: "medicineBatches",
+                name: "IX_MedicineBatchBase_MedicineId",
+                table: "MedicineBatchBase",
                 column: "MedicineId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_medicineBatches_SupplierId",
-                table: "medicineBatches",
+                name: "IX_MedicineBatchBase_SupplierId",
+                table: "MedicineBatchBase",
                 column: "SupplierId");
 
             migrationBuilder.CreateIndex(
@@ -150,16 +192,27 @@ namespace Persistence.Migrations
                 name: "IX_stocks_MedicineBatchId",
                 table: "stocks",
                 column: "MedicineBatchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_stocks_MedicineBatchId1",
+                table: "stocks",
+                column: "MedicineBatchId1");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ArchivedMedicineBatches");
+
+            migrationBuilder.DropTable(
                 name: "stocks");
 
             migrationBuilder.DropTable(
-                name: "medicineBatches");
+                name: "MedicineBatches");
+
+            migrationBuilder.DropTable(
+                name: "MedicineBatchBase");
 
             migrationBuilder.DropTable(
                 name: "medicines");

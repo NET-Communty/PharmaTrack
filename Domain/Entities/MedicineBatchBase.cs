@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class MedicineBatch
+    public class MedicineBatchBase
     {
         public int Id { get; set; }
         public long BatchNumber { get; set; }
@@ -15,13 +15,20 @@ namespace Domain.Entities
         public long Quantity { get; set; }
         public DateTime ReceviedAt { get; set; }
         public bool IsDeleted { get; set; }
+
         [ForeignKey("Medicine")]
         public int MedicineId { get; set; }
         public Medicine Medicine { get; set; }
         [ForeignKey("Supplier")]
         public int SupplierId { get; set; }
         public Supplier Supplier { get; set; }
+    }
+    public class MedicineBatch: MedicineBatchBase
+    {
         public ICollection<Stock> stocks { get; set; } = new HashSet<Stock>();
-        
+    }
+    public class ArchivedMedicineBatch : MedicineBatchBase
+    {
+        public DateTime ArchivedAt { get; set; }
     }
 }

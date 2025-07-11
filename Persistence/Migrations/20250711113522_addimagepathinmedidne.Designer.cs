@@ -12,8 +12,8 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(PharmaProjectContext))]
-    [Migration("20250710203919_init")]
-    partial class init
+    [Migration("20250711113522_addimagepathinmedidne")]
+    partial class addimagepathinmedidne
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,10 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -86,7 +90,7 @@ namespace Persistence.Migrations
                     b.ToTable("medicines");
                 });
 
-            modelBuilder.Entity("Domain.Entities.MedicineBatch", b =>
+            modelBuilder.Entity("Domain.Entities.MedicineBatchBase", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -121,7 +125,9 @@ namespace Persistence.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("medicineBatches");
+                    b.ToTable("MedicineBatchBase");
+
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Domain.Entities.Stock", b =>
@@ -138,6 +144,9 @@ namespace Persistence.Migrations
                     b.Property<int>("MedicineBatchId")
                         .HasColumnType("int");
 
+                    b.Property<int>("MedicineBatchId1")
+                        .HasColumnType("int");
+
                     b.Property<long>("Quantity")
                         .HasColumnType("bigint");
 
@@ -150,6 +159,8 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MedicineBatchId");
+
+                    b.HasIndex("MedicineBatchId1");
 
                     b.ToTable("stocks");
                 });
@@ -182,6 +193,23 @@ namespace Persistence.Migrations
                     b.ToTable("suppliers");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ArchivedMedicineBatch", b =>
+                {
+                    b.HasBaseType("Domain.Entities.MedicineBatchBase");
+
+                    b.Property<DateTime>("ArchivedAt")
+                        .HasColumnType("datetime2");
+
+                    b.ToTable("ArchivedMedicineBatches", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.MedicineBatch", b =>
+                {
+                    b.HasBaseType("Domain.Entities.MedicineBatchBase");
+
+                    b.ToTable("MedicineBatches", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Medicine", b =>
                 {
                     b.HasOne("Domain.Entities.Category", "Category")
@@ -201,7 +229,7 @@ namespace Persistence.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("Domain.Entities.MedicineBatch", b =>
+            modelBuilder.Entity("Domain.Entities.MedicineBatchBase", b =>
                 {
                     b.HasOne("Domain.Entities.Medicine", "Medicine")
                         .WithMany("medicineBatches")
@@ -222,13 +250,37 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Stock", b =>
                 {
-                    b.HasOne("Domain.Entities.MedicineBatch", "MedicineBatch")
-                        .WithMany("stocks")
+                    b.HasOne("Domain.Entities.MedicineBatchBase", "MedicineBatch")
+                        .WithMany()
                         .HasForeignKey("MedicineBatchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.MedicineBatch", null)
+                        .WithMany("stocks")
+                        .HasForeignKey("MedicineBatchId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("MedicineBatch");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ArchivedMedicineBatch", b =>
+                {
+                    b.HasOne("Domain.Entities.MedicineBatchBase", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.ArchivedMedicineBatch", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.MedicineBatch", b =>
+                {
+                    b.HasOne("Domain.Entities.MedicineBatchBase", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.MedicineBatch", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
@@ -241,16 +293,16 @@ namespace Persistence.Migrations
                     b.Navigation("medicineBatches");
                 });
 
-            modelBuilder.Entity("Domain.Entities.MedicineBatch", b =>
-                {
-                    b.Navigation("stocks");
-                });
-
             modelBuilder.Entity("Domain.Entities.Supplier", b =>
                 {
                     b.Navigation("medicineBatches");
 
                     b.Navigation("medicines");
+                });
+
+            modelBuilder.Entity("Domain.Entities.MedicineBatch", b =>
+                {
+                    b.Navigation("stocks");
                 });
 #pragma warning restore 612, 618
         }

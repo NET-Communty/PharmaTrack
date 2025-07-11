@@ -17,7 +17,7 @@ namespace Domain.Entities
 
         [ForeignKey("MedicineBatch")]
         public int MedicineBatchId { get; set; }
-        public MedicineBatch MedicineBatch { get; set; }
+        public MedicineBatchBase MedicineBatch { get; set; }
         
     }
     public enum Type
