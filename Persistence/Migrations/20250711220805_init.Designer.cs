@@ -12,8 +12,8 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(PharmaProjectContext))]
-    [Migration("20250711214608_updateTabels")]
-    partial class updateTabels
+    [Migration("20250711220805_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -141,10 +141,7 @@ namespace Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("MedicineBatchBaseId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MedicineBatchId")
+                    b.Property<int>("MedicineBatchId")
                         .HasColumnType("int");
 
                     b.Property<long>("Quantity")
@@ -157,8 +154,6 @@ namespace Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MedicineBatchBaseId");
 
                     b.HasIndex("MedicineBatchId");
 
@@ -250,17 +245,13 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Stock", b =>
                 {
-                    b.HasOne("Domain.Entities.MedicineBatchBase", "MedicineBatchBase")
-                        .WithMany()
-                        .HasForeignKey("MedicineBatchBaseId")
+                    b.HasOne("Domain.Entities.MedicineBatch", "MedicineBatch")
+                        .WithMany("stocks")
+                        .HasForeignKey("MedicineBatchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.MedicineBatch", null)
-                        .WithMany("stocks")
-                        .HasForeignKey("MedicineBatchId");
-
-                    b.Navigation("MedicineBatchBase");
+                    b.Navigation("MedicineBatch");
                 });
 
             modelBuilder.Entity("Domain.Entities.ArchivedMedicineBatch", b =>
