@@ -15,9 +15,9 @@ namespace Domain.Entities
         public Type type { get; set; }
         public bool IsDeleted { get; set; }
 
-        [ForeignKey("MedicineBatch")]
-        public int MedicineBatchId { get; set; }
-        public MedicineBatchBase MedicineBatch { get; set; }
+        [ForeignKey("MedicineBatchBase")]
+        public int MedicineBatchBaseId { get; set; }
+        public MedicineBatchBase MedicineBatchBase { get; set; }
         
     }
     public enum Type

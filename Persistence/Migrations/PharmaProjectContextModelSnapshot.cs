@@ -138,10 +138,10 @@ namespace Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("MedicineBatchId")
+                    b.Property<int>("MedicineBatchBaseId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MedicineBatchId1")
+                    b.Property<int?>("MedicineBatchId")
                         .HasColumnType("int");
 
                     b.Property<long>("Quantity")
@@ -155,9 +155,9 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MedicineBatchId");
+                    b.HasIndex("MedicineBatchBaseId");
 
-                    b.HasIndex("MedicineBatchId1");
+                    b.HasIndex("MedicineBatchId");
 
                     b.ToTable("stocks");
                 });
@@ -229,13 +229,13 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.MedicineBatchBase", b =>
                 {
                     b.HasOne("Domain.Entities.Medicine", "Medicine")
-                        .WithMany("medicineBatches")
+                        .WithMany("medicineBatchesBase")
                         .HasForeignKey("MedicineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Supplier", "Supplier")
-                        .WithMany("medicineBatches")
+                        .WithMany("medicineBatchesBase")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -247,19 +247,17 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Stock", b =>
                 {
-                    b.HasOne("Domain.Entities.MedicineBatchBase", "MedicineBatch")
+                    b.HasOne("Domain.Entities.MedicineBatchBase", "MedicineBatchBase")
                         .WithMany()
-                        .HasForeignKey("MedicineBatchId")
+                        .HasForeignKey("MedicineBatchBaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.MedicineBatch", null)
                         .WithMany("stocks")
-                        .HasForeignKey("MedicineBatchId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MedicineBatchId");
 
-                    b.Navigation("MedicineBatch");
+                    b.Navigation("MedicineBatchBase");
                 });
 
             modelBuilder.Entity("Domain.Entities.ArchivedMedicineBatch", b =>
@@ -287,12 +285,12 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Medicine", b =>
                 {
-                    b.Navigation("medicineBatches");
+                    b.Navigation("medicineBatchesBase");
                 });
 
             modelBuilder.Entity("Domain.Entities.Supplier", b =>
                 {
-                    b.Navigation("medicineBatches");
+                    b.Navigation("medicineBatchesBase");
 
                     b.Navigation("medicines");
                 });

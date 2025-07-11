@@ -21,7 +21,7 @@ namespace Domain.Entities
         [ForeignKey("Supplier")]
         public int SupplierId { get; set; }
         public Supplier Supplier { get; set; }
-        public ICollection<MedicineBatchBase> medicineBatches { get; set; } = new HashSet<MedicineBatchBase>();
+        public ICollection<MedicineBatchBase> medicineBatchesBase { get; set; } = new HashSet<MedicineBatchBase>();
        
     }
 }
