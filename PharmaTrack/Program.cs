@@ -1,6 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
+using Persistence.Repositories;
+using Service.Abstractions.Repositories;
 
 namespace PharmaTrack
 {
@@ -17,7 +19,7 @@ namespace PharmaTrack
             builder.Services.AddOpenApi();
             builder.Services.AddDbContext<PharmaProjectContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("cs")));
-
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             var app = builder.Build();
 
