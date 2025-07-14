@@ -17,7 +17,7 @@ namespace Services.Services
     {
         IStockRepository stockRepository;
         IMedicineBatchRepository medicineBatchRepository;
-        StockService(IStockRepository _stockRepository , IMedicineBatchRepository _medicineBatchRepository)
+        public StockService(IStockRepository _stockRepository , IMedicineBatchRepository _medicineBatchRepository)
         {
             this.stockRepository = _stockRepository;
             this.medicineBatchRepository = _medicineBatchRepository;
@@ -46,7 +46,7 @@ namespace Services.Services
 
         public async Task DeleteStockAsync(int StockId)
         {
-            Stock stock = stockRepository.GetByIdAsync(StockId).Result;
+            Stock stock =await stockRepository.GetByIdAsync(StockId);
             if (stock == null)
             {
                 throw new Exception("Stock not found");

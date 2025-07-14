@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Service.Abstractions.Services
 {
     public interface IMedicineService{
-        klfml
 
 
     }

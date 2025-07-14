@@ -24,7 +24,12 @@ namespace PharmaTrack
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 
+            builder.Services.AddScoped<IStockRepository, StockRepository>();
+            builder.Services.AddScoped<IMedicineBatchRepository, MedicineBatchRepository>();
+
+
             builder.Services.AddScoped<IStockService, StockService>();
+            builder.Services.AddScoped<IMedicineService, MedicineService>();
 
             var app = builder.Build();
 
