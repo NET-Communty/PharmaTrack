@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Services\Services.csproj" />
+    <Compile Remove="Configurtions\**" />
+    <EmbeddedResource Remove="Configurtions\**" />
+    <None Remove="Configurtions\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configurtions\" />
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
 </Project>
