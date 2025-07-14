@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Repositories;
 using Service.Abstractions.Repositories;
+using Service.Abstractions.Services;
+using Services.Services;
 
 namespace PharmaTrack
 {
@@ -20,6 +22,9 @@ namespace PharmaTrack
             builder.Services.AddDbContext<PharmaProjectContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("cs")));
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+
+            builder.Services.AddScoped<IStockService, StockService>();
 
             var app = builder.Build();
 
