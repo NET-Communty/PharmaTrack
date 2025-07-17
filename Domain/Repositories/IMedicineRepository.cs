@@ -9,5 +9,7 @@ namespace Service.Abstractions.Repositories
 {
     public interface IMedicineRepository: IGenericRepository<Medicine>
     {
+        Task<IEnumerable<Medicine>> GetAllMedicineByCategoryId(int categoryId);
+        Task<IEnumerable<Medicine>> GetAllMedicineBySupplierId(int SupplierId);
     }
 }

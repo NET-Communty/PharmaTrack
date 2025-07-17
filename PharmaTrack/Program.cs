@@ -9,6 +9,8 @@ using Service.Abstractions.Repositories;
 using Service.Abstractions.Services;
 using Services.AutoMapper.CategoryAtoMapper;
 using Services.Services;
+using Services.AutoMapper.MedicineAtoMapper;
+using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 
 namespace PharmaTrack
 {
@@ -30,11 +32,15 @@ namespace PharmaTrack
             builder.Services.AddScoped<IStockRepository, StockRepository>();
             builder.Services.AddScoped<IMedicineBatchRepository, MedicineBatchRepository>();
             builder.Services.AddScoped<IStockService, StockService>();
-            builder.Services.AddScoped<IMedicineService, MedicineService>();
+            
 
             builder.Services.AddAutoMapper(map => map.AddProfile(new CategoryMappingProfile()));
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+            builder.Services.AddAutoMapper(map => map.AddProfile(new MedicineMappingProfile()));
+            builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
+            builder.Services.AddScoped<IMedicineSercive,MedicineSercive>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
