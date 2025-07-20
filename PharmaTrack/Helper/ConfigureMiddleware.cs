@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
+using PharmaTrack.Middlewares;
 
 namespace PharmaTrack.Helper
 {
@@ -30,6 +31,8 @@ namespace PharmaTrack.Helper
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.MapControllers();
 

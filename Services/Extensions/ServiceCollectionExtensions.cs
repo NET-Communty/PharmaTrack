@@ -32,6 +32,7 @@ namespace Services.Extensions
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ISupplierService, SupplierService>();
 
+
         }
 
         private static void AddAutoMapperServices(this IServiceCollection services)
