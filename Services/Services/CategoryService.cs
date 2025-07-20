@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Exceptions;
 using Service.Abstractions.Dtos.CategoryDto;
 using Service.Abstractions.HandlerResponse;
 using Service.Abstractions.IServices;
@@ -24,31 +25,28 @@ namespace Services.Services
         }
         public async Task<ServiceResponse<List<CategoryReadDto>>> GetAllCategories()
         {
-            var response = new ServiceResponse<List<CategoryReadDto>>();
+            
             var categories = await _categoryRepository.GetAllAsync();
-            if(categories?.Any()!=true)
+            if(categories is null || !categories.Any())
             {
-                response.Message="No Category Found.";
-                response.Success=false;
-                return response;
+                throw new NotFoundException("No categories found.");
             }
-            response.Data=_mapper.Map<List<CategoryReadDto>>(categories);
-            response.Message="Categories retrieved successfully";
-            return response;
+
+            var categoryDtos = _mapper.Map<List<CategoryReadDto>>(categories);
+            return new ServiceResponse<List<CategoryReadDto>>(categoryDtos);
+
         }
         public async Task<ServiceResponse<CategoryReadDto>> GetCategoryById(int id)
         {
-            var response = new ServiceResponse<CategoryReadDto>();
             var category = await _categoryRepository.GetByIdAsync(id);
             if(category is null)
             {
-                response.Message="Category does not exist";
-                response.Success=false;
-                return response;
+                throw new NotFoundException($"Category with ID {id} not found.");
             }
-            response.Data=_mapper.Map<CategoryReadDto>(category);
-            response.Message="Category retrieved successfully";
-            return response;
+            var categoryDto = _mapper.Map<CategoryReadDto>(category);
+            return new ServiceResponse<CategoryReadDto>(categoryDto);
+
+
         }
         public async Task<ServiceResponse<CategoryReadDto>> AddCategory(CategoryAddDto categoryAddDto)
         {

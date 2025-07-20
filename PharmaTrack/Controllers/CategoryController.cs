@@ -20,21 +20,14 @@ namespace PharmaTrack.Controllers
         public async Task<ActionResult<ServiceResponse<CategoryReadDto>>> GetAllCategories()
         {
             var response = await _categoryService.GetAllCategories();
-            if(response.Success)
-            {
-                return Ok(response.Data);
-            }
-            return BadRequest(response.Message);
+            return Ok(response);
+
         }
         [HttpGet("GetCategoryById/{id}")]
         public async Task<ActionResult<ServiceResponse<CategoryReadDto>>> GetCategoryById(int id)
         {
             var response = await _categoryService.GetCategoryById(id);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
+           return Ok(response);
         }
         [HttpPost("CreateCategory")]
         public async Task<ActionResult<ServiceResponse<CategoryReadDto>>> AddCategory(CategoryAddDto categoryAddDto)
