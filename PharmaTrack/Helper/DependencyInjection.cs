@@ -1,4 +1,5 @@
 ﻿using Persistence.Extensions;
+using PharmaTrack.Middlewares;
 using Services.Extensions;
 
 namespace PharmaTrack.Helper
@@ -11,12 +12,19 @@ namespace PharmaTrack.Helper
             services.AddPersistenceServices(configuration);
             services.AddSwaggerServices();
             services.AddApplicationServices();
+            services.RegisterMiddleware();
+
         }
 
-        public static void AddSwaggerServices(this IServiceCollection services)
+        private static void AddSwaggerServices(this IServiceCollection services)
         {
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+        }
+
+        private static void RegisterMiddleware(this IServiceCollection services)
+        {
+            services.AddScoped<ExceptionMiddleware>();
         }
     }
 }
