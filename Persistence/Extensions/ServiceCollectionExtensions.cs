@@ -3,7 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Context;
 using Persistence.Repositories;
+using Service.Abstractions.IServices;
 using Service.Abstractions.Repositories;
+using Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +36,7 @@ namespace Persistence.Extensions
             services.AddScoped<IMedicineBatchRepository, MedicineBatchRepository>();
             services.AddScoped<IMedicineRepository, MedicineRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+           services.AddScoped<ISupplierRepository, SupplierRepository>();
 
 
         }

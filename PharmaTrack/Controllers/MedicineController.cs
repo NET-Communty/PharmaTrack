@@ -7,9 +7,8 @@ using Service.Abstractions.IServices;
 
 namespace PharmaTrack.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class MedicineController : ControllerBase
+
+    public class MedicineController : APIController
     {
         private readonly IMedicineSercive _medicineSercive;
         private readonly IWebHostEnvironment _webHostEnvironment;

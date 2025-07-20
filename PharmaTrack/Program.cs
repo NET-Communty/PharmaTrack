@@ -13,6 +13,7 @@ using Services.AutoMapper.MedicineAtoMapper;
 using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 using PharmaTrack.Helper;
 using System.Threading.Tasks;
+using Persistence.DataSeeding;
 
 namespace PharmaTrack
 {
@@ -27,6 +28,11 @@ namespace PharmaTrack
             var app = builder.Build();
 
             await app.ConfigureMiddlewareServices();
+            // Seed Data
+            using (var scope = app.Services.CreateScope())
+            {
+                DataSeeder.Seed(scope.ServiceProvider);
+            }
 
             app.Run();
         }

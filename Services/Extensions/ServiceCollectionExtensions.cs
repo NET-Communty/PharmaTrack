@@ -3,6 +3,7 @@ using Service.Abstractions.IServices;
 using Service.Abstractions.Services;
 using Services.AutoMapper.CategoryAtoMapper;
 using Services.AutoMapper.MedicineAtoMapper;
+using Services.AutoMapper.SupplierAtoMapper;
 using Services.Services;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Services.Extensions
 {
@@ -27,8 +29,8 @@ namespace Services.Extensions
         {
             services.AddScoped<IStockService, StockService>();
             services.AddScoped<IMedicineSercive, MedicineSercive>();
-            services.AddScoped<IMedicineSercive, MedicineSercive>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ISupplierService, SupplierService>();
 
         }
 
@@ -36,6 +38,7 @@ namespace Services.Extensions
         {
            services.AddAutoMapper(map => map.AddProfile(new CategoryMappingProfile()));
            services.AddAutoMapper(map => map.AddProfile(new MedicineMappingProfile()));
+            services.AddAutoMapper(map => map.AddProfile(new SupplierMappingProfile()));
         }
     }
 }

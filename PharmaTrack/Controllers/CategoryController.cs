@@ -7,9 +7,8 @@ using Service.Abstractions.IServices;
 
 namespace PharmaTrack.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CategoryController : ControllerBase
+
+    public class CategoryController : APIController
     {
         private readonly ICategoryService _categoryService;
         public CategoryController(ICategoryService categoryService)
