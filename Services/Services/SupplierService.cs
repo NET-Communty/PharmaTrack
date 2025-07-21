@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Interfaces.Repositories;
 using Service.Abstractions.Dtos.SupplierDto;
 using Service.Abstractions.HandlerResponse;
 using Service.Abstractions.IServices;
-using Service.Abstractions.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

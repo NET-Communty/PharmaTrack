@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Abstractions.Repositories
+namespace Domain.Interfaces.Repositories
 {
     public interface IMedicineRepository: IGenericRepository<Medicine>
     {

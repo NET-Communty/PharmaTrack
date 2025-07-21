@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions.Dtos.SupplierDto;
 using Service.Abstractions.HandlerResponse;
 using Service.Abstractions.IServices;
-using Service.Abstractions.Repositories;
-
 namespace PharmaTrack.Controllers
 {
 

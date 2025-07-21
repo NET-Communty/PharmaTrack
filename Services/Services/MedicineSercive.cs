@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
 using Service.Abstractions.Dtos.MedicineDto;
 using Service.Abstractions.HandlerResponse;
 using Service.Abstractions.IServices;
-using Service.Abstractions.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

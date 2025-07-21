@@ -1,8 +1,8 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Service.Abstractions.Dtos.MedicineBatchDto;
-using Service.Abstractions.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
