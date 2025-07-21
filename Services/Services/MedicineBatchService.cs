@@ -1,9 +1,9 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces.Repositories;
 using Service.Abstractions.Dtos.MedicineBatchDto;
 using Service.Abstractions.Dtos.MedicineDto;
 using Service.Abstractions.HandlerResponse;
 using Service.Abstractions.IServices;
-using Service.Abstractions.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -183,10 +183,12 @@ namespace Services.Services
         public Task<ServiceResponse<GetMedicineBatchDto>> GetMedicineBatchById(int id)
         {
             throw new NotImplementedException();
+
         }
 
         public Task<ServiceResponse<List<GetMedicineBatchDto>>> GetMedicineBatchesByIdSupplierId(int supplierId)
         {
+            throw new NotImplementedException();
 
         }
 

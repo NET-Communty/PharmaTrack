@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces.Repositories;
 using Service.Abstractions.Dtos;
-using Service.Abstractions.Repositories;
 using Service.Abstractions.Services;
 using System;
 using System.Collections;

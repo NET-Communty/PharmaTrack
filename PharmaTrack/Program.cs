@@ -3,9 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Repositories;
 using Microsoft.OpenApi.Models; 
-
 using Service.Abstractions.IServices;
-using Service.Abstractions.Repositories;
 using Service.Abstractions.Services;
 using Services.AutoMapper.CategoryAtoMapper;
 using Services.Services;

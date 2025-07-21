@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Context;
 using Persistence.Repositories;
 using Service.Abstractions.IServices;
-using Service.Abstractions.Repositories;
 using Services.Services;
 using System;
 using System.Collections.Generic;

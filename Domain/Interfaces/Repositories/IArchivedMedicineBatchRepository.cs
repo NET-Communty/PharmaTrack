@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Abstractions.Repositories
+namespace Domain.Interfaces.Repositories
 {
-    public interface ICategoryRepository: IGenericRepository<Category>
+    public interface IArchivedMedicineBatchRepository:IGenericRepository<ArchivedMedicineBatch>
     {
     }
 }

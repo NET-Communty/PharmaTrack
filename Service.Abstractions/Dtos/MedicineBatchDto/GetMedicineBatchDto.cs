@@ -20,8 +20,8 @@ namespace Service.Abstractions.Dtos.MedicineBatchDto
 
         public DateTime ReceviedAt { get; set; }
 
-        //public string MedicineName { get; set; }
-        //public string SupplierName { get; set; }
+        public string MedicineName { get; set; }
+        public string SupplierName { get; set; }
 
 
 
