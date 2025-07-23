@@ -9,7 +9,7 @@ namespace Service.Abstractions.Dtos
     public class StockDto
     {
         public long Quantity { get; set; }
-        public Domain.Entities.Type Type { get; set; }
+        public Domain.Entities.StockMovementType StockMovementType { get; set; }
 
         public DateTime timestamp { get; set; }
     }

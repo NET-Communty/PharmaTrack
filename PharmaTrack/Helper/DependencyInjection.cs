@@ -13,6 +13,7 @@ namespace PharmaTrack.Helper
             services.AddSwaggerServices();
             services.AddApplicationServices();
             services.RegisterMiddleware();
+            services.AddSignalR();
 
         }
 

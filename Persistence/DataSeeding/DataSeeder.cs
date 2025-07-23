@@ -72,6 +72,7 @@ namespace Persistence.DataSeeding
                     context.SaveChanges();
                 
             }
+
                 }
             }
         }

@@ -1,107 +1,107 @@
 ﻿using Domain.Entities;
-using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Repositories;   
 using Service.Abstractions.Dtos;
 using Service.Abstractions.Services;
+using Service.Abstractions.Notifications;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-
 
 namespace Services.Services
 {
     public class StockService : IStockService
     {
-        IStockRepository stockRepository;
-        IMedicineBatchRepository medicineBatchRepository;
-        public StockService(IStockRepository _stockRepository , IMedicineBatchRepository _medicineBatchRepository)
+        private readonly IStockRepository _stockRepository;
+        private readonly IMedicineBatchRepository _medicineBatchRepository;
+        private readonly ILowStockNotifier _notifier;
+
+        public StockService(
+            IStockRepository stockRepository,
+            IMedicineBatchRepository medicineBatchRepository,
+            ILowStockNotifier notifier)
         {
-            this.stockRepository = _stockRepository;
-            this.medicineBatchRepository = _medicineBatchRepository;
+            _stockRepository = stockRepository;
+            _medicineBatchRepository = medicineBatchRepository;
+            _notifier = notifier;
         }
-        public async Task AddStockAsync(int medicineBatchId, int quantity, Domain.Entities.Type type)
+
+        public async Task AddStockAsync(int medicineBatchId, int quantity, StockMovementType stockMovementType)
         {
-           MedicineBatch medicineBatch = await medicineBatchRepository.GetByIdAsync(medicineBatchId);
-            if(medicineBatch == null)
-            {
+            var medicineBatch = await _medicineBatchRepository.GetByIdAsync(medicineBatchId);
+            if (medicineBatch == null)
                 throw new Exception("medicine batch not found");
-            }
-            Stock stock = new Stock
+
+            var stock = new Stock
             {
-                MedicineBatchId=medicineBatchId,
-                Quantity=quantity,
-                TimeStamp=DateTime.Now,
-                type=type
+                MedicineBatchId = medicineBatchId,
+                Quantity = quantity,
+                TimeStamp = DateTime.Now,
+                StockMovementType = stockMovementType
             };
 
-           await stockRepository.AddAsync(stock);
-           await stockRepository.SaveAsync();
-            
+            await _stockRepository.AddAsync(stock);
+            await _stockRepository.SaveAsync();
 
+            medicineBatch.Quantity += quantity;
+            await _medicineBatchRepository.SaveAsync();
+
+            await CheckAndNotifyIfLowAsync(medicineBatch);
         }
 
-
-        public async Task DeleteStockAsync(int StockId)
+        public async Task DeleteStockAsync(int stockId)
         {
-            Stock stock =await stockRepository.GetByIdAsync(StockId);
+            var stock = await _stockRepository.GetByIdAsync(stockId);
             if (stock == null)
-            {
                 throw new Exception("Stock not found");
-            }
 
             stock.IsDeleted = true;
-            stockRepository.Update(stock);
-            await stockRepository.SaveAsync();
-                 
-            
-        }
+            _stockRepository.Update(stock);
+            await _stockRepository.SaveAsync();
 
+            var batch = await _medicineBatchRepository.GetByIdAsync(stock.MedicineBatchId);
+            if (batch != null)
+            {
+                await CheckAndNotifyIfLowAsync(batch);
+            }
+        }
 
         public async Task<long> GetAvailableQuantityAsync(int batchId)
         {
-            MedicineBatch medicineBatch = await medicineBatchRepository.GetByIdAsync(batchId);
+            var medicineBatch = await _medicineBatchRepository.GetByIdAsync(batchId);
             if (medicineBatch == null)
-            {
                 throw new Exception("medicine batch not found");
-            }
-            long quantity = medicineBatch.Quantity;
 
-            return quantity;
-
+            return medicineBatch.Quantity;
         }
 
         public async Task<List<StockDto>> GetStockHistoryAsync(int batchId)
         {
-            MedicineBatch medicineBatch = await medicineBatchRepository.GetByIdAsync(batchId);
-
+            var medicineBatch = await _medicineBatchRepository.GetByIdAsync(batchId);
             if (medicineBatch == null)
-            {
                 throw new Exception("medicine batch not found");
 
-            }
-
-            var stocks = medicineBatch.stocks;
-            List<StockDto> stockDtos = new List<StockDto>();
-
-
-            foreach(var stock in stocks)
+            var stocks = medicineBatch.stocks ?? new List<Stock>();
+            return stocks.Select(s => new StockDto
             {
-                stockDtos.Add(new StockDto
-                {
-                   Quantity=stock.Quantity,
-                   timestamp=stock.TimeStamp,
-                   Type=stock.type
-
-                }
-                );
-            }
-
-            return stockDtos;
+                Quantity = s.Quantity,
+                timestamp = s.TimeStamp,
+                StockMovementType = s.StockMovementType
+            }).ToList();
         }
 
+        private async Task CheckAndNotifyIfLowAsync(MedicineBatch batch)
+        {
+            var med = batch.Medicine;
+            if (med == null) 
+                return;
+            
 
+            long available = batch.Quantity; 
+            if (available <= med.LowStockThreshold)
+            {
+                await _notifier.NotifyLowStockAsync(med.Id, med.Name, available, med.LowStockThreshold);
+            }
+        }
     }
 }

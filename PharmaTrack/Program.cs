@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 using PharmaTrack.Helper;
 using System.Threading.Tasks;
 using Persistence.DataSeeding;
+using PharmaTrack.Notifications;
+using Service.Abstractions.Notifications;
 
 namespace PharmaTrack
 {
@@ -22,6 +24,7 @@ namespace PharmaTrack
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDependency(builder.Configuration);
+            builder.Services.AddScoped<ILowStockNotifier, SignalRLowStockNotifier>();
 
             var app = builder.Build();
 

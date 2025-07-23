@@ -12,7 +12,7 @@ namespace Domain.Entities
         public int Id { get; set; }
         public long Quantity { get; set; }
         public DateTime TimeStamp { get; set; }
-        public Type type { get; set; }
+        public StockMovementType StockMovementType { get; set; }
         public bool IsDeleted { get; set; }
 
         [ForeignKey("MedicineBatch")]
@@ -20,7 +20,7 @@ namespace Domain.Entities
         public MedicineBatch MedicineBatch { get; set; }
         
     }
-    public enum Type
+    public enum StockMovementType
     {
         In=1,
         Out=2,

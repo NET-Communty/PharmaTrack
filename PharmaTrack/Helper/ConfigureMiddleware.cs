@@ -35,6 +35,7 @@ namespace PharmaTrack.Helper
             app.UseMiddleware<ExceptionMiddleware>();
 
             app.MapControllers();
+            app.MapHub<PharmaTrack.Hubs.NotificationHub>("/notificationHub");
 
             return app;
         }
