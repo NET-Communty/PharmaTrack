@@ -16,7 +16,11 @@ namespace PharmaTrack.Middlewares
 			{
 				HandleException(context, 404, ex.Message);
 			}
-		
+			catch(BadRequestException ex)
+			{
+				HandleException(context, 400, ex.Message);
+			}
+			
             catch (Exception ex)
 			{
 

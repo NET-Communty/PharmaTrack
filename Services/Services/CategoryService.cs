@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Entities;
 using Domain.Exceptions;
+using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Service.Abstractions.Dtos.CategoryDto;
 using Service.Abstractions.HandlerResponse;
@@ -15,19 +16,20 @@ namespace Services.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryService(ICategoryRepository categoryRepository,IMapper mapper)
+        public CategoryService( IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _categoryRepository=categoryRepository;
             _mapper=mapper;
+            _unitOfWork=unitOfWork;
+                
         }
         public async Task<ServiceResponse<List<CategoryReadDto>>> GetAllCategories()
         {
             
-            var categories = await _categoryRepository.GetAllAsync();
-            if(categories is null || !categories.Any())
+            var categories = await _unitOfWork.Repository<Category>().GetAllAsync();
+            if (categories is null || !categories.Any())
             {
                 throw new NotFoundException("No categories found.");
             }
@@ -38,104 +40,67 @@ namespace Services.Services
         }
         public async Task<ServiceResponse<CategoryReadDto>> GetCategoryById(int id)
         {
-            var category = await _categoryRepository.GetByIdAsync(id);
-            if(category is null)
+            var category = await _unitOfWork.Repository<Category>().GetByIdAsync(id);
+            if (category is null)
             {
                 throw new NotFoundException($"Category with ID {id} not found.");
             }
-            var categoryDto = _mapper.Map<CategoryReadDto>(category);
-            return new ServiceResponse<CategoryReadDto>(categoryDto);
+            return new ServiceResponse<CategoryReadDto>(_mapper.Map<CategoryReadDto>(category));
 
 
         }
         public async Task<ServiceResponse<CategoryReadDto>> AddCategory(CategoryAddDto categoryAddDto)
         {
-            var response = new ServiceResponse<CategoryReadDto>();
-            if(categoryAddDto is null)
-            {
-                response.Message="Invalid data provided.";
-                response.Success=false;
-                return response;
-            }
-            try
-            {
-                var data = _mapper.Map<Category>(categoryAddDto);
-                await _categoryRepository.AddAsync(data);
-                await _categoryRepository.SaveAsync();
 
-                response.Data =_mapper.Map<CategoryReadDto>(data);
-                response.Message="Category added successfully";
-            }
-            catch(Exception ex)
+            var category = _mapper.Map<Category>(categoryAddDto);
+
+            if (category is null)
             {
-                response.Success =false;
-                var innerMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                response.Message = $"An error occurred while adding the category. Details: {innerMessage}";
+                throw new BadRequestException("Invalid category data provided.");
             }
-            return response;
+
+            await _unitOfWork.Repository<Category>().AddAsync(category);
+            await _unitOfWork.SaveAsync();
+
+            var categoryReadDto = _mapper.Map<CategoryReadDto>(category);
+            return new ServiceResponse<CategoryReadDto>(categoryReadDto)
+            {
+                Message = "Category added successfully.",
+                Success = true
+            };
+
+
         }
-        public async Task<ServiceResponse<bool>> UpdateCategory(CategoryUpdateDto categoryUpdateDto)
+        public async Task<ServiceResponse<bool>> UpdateCategory(int id, CategoryUpdateDto categoryUpdateDto)
         {
-            var response = new ServiceResponse<bool>();
-            try
+            var category = await _unitOfWork.Repository<Category>().GetByIdAsync(id);
+
+            if (category is null)
             {
-                if(categoryUpdateDto is null)
-                {
-                    response.Message="Invalid data provided.";
-                    response.Success=false;
-                    return response;
-                }
-                var existingItem = await _categoryRepository.GetByIdAsync(categoryUpdateDto.Id);
-                if(existingItem is null)
-                {
-                    response.Success=false;
-                    response.Message = $"Category does not exist.";
-                    response.Data = false;
-                    return response;
-                }
-                var item = _mapper.Map(categoryUpdateDto, existingItem);
-                await _categoryRepository.SaveAsync();
-                response.Success = true;
-                response.Message = "Category updated successfully.";
+                throw new NotFoundException($"Category with ID {id} not found.");
             }
-            catch(Exception ex)
-            {
-                response.Success =false;
-                var innerMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                response.Message = $"An error occurred while Updating the category. Details: {innerMessage}";
-                response.Data = false;
-            }
-            return response;
+
+            _mapper.Map(categoryUpdateDto, category);
+
+            await _unitOfWork.SaveAsync();
+
+            return new ServiceResponse<bool>(true, "Category updated successfully.");
+
         }
         public async Task<ServiceResponse<bool>> DeleteCategory(int id)
         {
-            var response = new ServiceResponse<bool>();
-            try
+            var category = await _unitOfWork.Repository<Category>().GetByIdAsync(id);
+            if (category is null)
             {
-                var item = await _categoryRepository.GetByIdAsync(id);
-                if(item is null)
-                {
-                    response.Success =false;
-                    response.Message = "Category not found";
-                    return response;
-                }
-                _categoryRepository.Delete(item);
-               await _categoryRepository.SaveAsync();
-                response.Message = "Category deleted successfully";
-                response.Data = true;
+                throw new NotFoundException($"Category with ID {id} not found.");
             }
-            catch(Exception ex)
-            {
-                response.Success =false;
-                var innerMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                response.Message = $"An error occurred while deleting the category. Details: {innerMessage}";
-                response.Data = false;
-            }
-            return response;
+            _unitOfWork.Repository<Category>().Delete(category);
+            await _unitOfWork.SaveAsync();
+            return new ServiceResponse<bool>(true, "Category deleted successfully.");
+            
+
+
         }
-        public async Task SaveChanges()
-        {
-            await _categoryRepository.SaveAsync();
-        }
+       
     }
 }

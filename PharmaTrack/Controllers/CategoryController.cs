@@ -32,32 +32,21 @@ namespace PharmaTrack.Controllers
         public async Task<ActionResult<ServiceResponse<CategoryReadDto>>> AddCategory(CategoryAddDto categoryAddDto)
         {
             var response = await _categoryService.AddCategory(categoryAddDto);
-            if (response.Success)
-            {
-                return Ok(response.Data);
-            }
-            return BadRequest(response.Message);
+            return CreatedAtAction(nameof(GetCategoryById), new { id = response.Data.Id },response);
         }
         [HttpDelete("DeleteCategory/{id}")]
         public async Task<ActionResult<ServiceResponse<bool>>> DeleteCategory(int id)
         {
-            var response = await _categoryService.DeleteCategory(id);
-            if (response.Success)
-            {
-                return Ok(response.Message);
-            }
-            return BadRequest(response.Message);
+           var response= await _categoryService.DeleteCategory(id);
+           
+            return Ok(response);
 
         }
-        [HttpPut("UpdateCategory")]
-        public async Task<ActionResult<ServiceResponse<bool>>> UpdateCategory(CategoryUpdateDto categoryUpdateDto)
+        [HttpPut("UpdateCategory/{id}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateCategory(int id, CategoryUpdateDto categoryUpdateDto)
         {
-            var response = await _categoryService.UpdateCategory(categoryUpdateDto);
-            if (response.Success)
-            {
-                return Ok(response.Message);
-            }
-            return BadRequest(response.Message);
+            var response = await _categoryService.UpdateCategory(id, categoryUpdateDto);
+            return Ok(response);
         }
     }
 }

@@ -34,7 +34,6 @@ namespace Persistence
                 _repositories.Add(type, repository);
 
             }
-
             return _repositories[type] as IGenericRepository<TEntity> ;
         }
 
