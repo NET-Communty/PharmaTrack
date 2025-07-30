@@ -16,6 +16,7 @@ namespace Service.Abstractions.HandlerResponse
         {
             Data = data;
             StatusCode = 200; // Default to OK
+            Success= true;
             Message = message ?? string.Empty;
         }
 
